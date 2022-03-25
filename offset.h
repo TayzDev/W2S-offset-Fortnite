@@ -1,13 +1,3 @@
-namespace W2S {
-    uintptr_t chain69 = 0xC8;
-    uintptr_t chain699 = 0x7E0; //pitch
-    uintptr_t chain = 0x70;
-    uintptr_t chain1 = 0x98;
-    uintptr_t chain2 = 0x140;
-    uintptr_t vDelta = 0x10;
-    uintptr_t zoom = 0x580;
-}
-
 Vector3 ProjectWorldToScreen(Vector3 WorldLocation) {
 	Vector3 Screenlocation = Vector3(0, 0, 0);
 	Vector3 Camera;
