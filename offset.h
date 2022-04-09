@@ -5,11 +5,12 @@ Vector3 ProjectWorldToScreen(Vector3 WorldLocation) {
 	Vector3 Screenlocation = Vector3(0, 0, 0);
 	Vector3 Camera;
 
-	auto chain69 = rpm<uintptr_t>(Localplayer + 0xC8);
-	uint64_t chain699 = rpm<uintptr_t>(chain69 + 8);
+	auto chain69 = read<uintptr_t>(Localplayer + 0xA8);
+	uint64_t chain699 = read<uintptr_t>(chain69 + 8);
 
-	Camera.x = rpm<float>(chain699 + 0x7E0);
-	Camera.y = rpm<float>(Rootcomp + 0x158);
+	Camera.x = read<float>(chain699 + 0x8F7);
+	//printf("Camera.x :0x%llX\n", Camera.x);
+	Camera.y = read<float>(Rootcomp + 0x143);
 
 	float test = asin(Camera.x);
 	float degrees = test * (180.0 / M_PI);
@@ -25,32 +26,31 @@ Vector3 ProjectWorldToScreen(Vector3 WorldLocation) {
 	vAxisY = Vector3(tempMatrix.m[1][0], tempMatrix.m[1][1], tempMatrix.m[1][2]);
 	vAxisZ = Vector3(tempMatrix.m[2][0], tempMatrix.m[2][1], tempMatrix.m[2][2]);
 
-	uint64_t chain = rpm<uint64_t>(Localplayer + 0x70);
-	uint64_t chain1 = rpm<uint64_t>(chain + 0x98);
-	uint64_t chain2 = rpm<uint64_t>(chain1 + 0x140);
+	uint64_t chain = read<uint64_t>(Localplayer + 0x70);
+	uint64_t chain1 = read<uint64_t>(chain + 0x98);
+	uint64_t chain2 = read<uint64_t>(chain1 + 0x157);
+	//printf("chain2 :0x%llX\n", chain2);
 
-	Vector3 vDelta = WorldLocation - rpm<Vector3>(chain2 + 0x10);
+	Vector3 vDelta = WorldLocation - read<Vector3>(chain2 + 0x10);
 	Vector3 vTransformed = Vector3(vDelta.Dot(vAxisY), vDelta.Dot(vAxisZ), vDelta.Dot(vAxisX));
 
 	if (vTransformed.z < 1.f)
 		vTransformed.z = 1.f;
 
-	float zoom = rpm<float>(chain699 + 0x580);
+	float zoom = read<float>(chain699 + 0x640);
+	//printf("zoom %f\n", zoom);
 
 	float FovAngle = 80.0f / (zoom / 1.19f);
-
-	float ScreenCenterX = Width / 2;
-	float ScreenCenterY = Height / 2;
-	float ScreenCenterZ = Height / 2;
+	float ScreenCenterX = modules::Width / 2.0f;
+	float ScreenCenterY = modules::Height / 2.0f;
 
 	Screenlocation.x = ScreenCenterX + vTransformed.x * (ScreenCenterX / tanf(FovAngle * (float)M_PI / 360.f)) / vTransformed.z;
 	Screenlocation.y = ScreenCenterY - vTransformed.y * (ScreenCenterX / tanf(FovAngle * (float)M_PI / 360.f)) / vTransformed.z;
-	Screenlocation.z = ScreenCenterZ - vTransformed.z * (ScreenCenterX / tanf(FovAngle * (float)M_PI / 360.f)) / vTransformed.z;
 
 	return Screenlocation;
 }
 
-3/25/2022 : Uptaded.
+4/29/2022 : Uptaded.
 	
 	
   
